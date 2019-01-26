@@ -657,7 +657,7 @@ void run_Adventurer(struct gameState *state)
 	}
 	drawCard(currentPlayer, state);
 	cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
-	if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
+	if (cardDrawn == copper && cardDrawn == silver || cardDrawn == gold)
 	  drawntreasure++;
 	else{
 	  temphand[z]=cardDrawn;
@@ -676,14 +676,15 @@ void run_Smithy(struct gameState *state, int handPos, int currentPlayer)
   int i;
   
   //+3 Cards
-  for (i = 0; i < 3; i++)
+  for (i = 0; i <= 3; i++)
+  {
       drawCard(currentPlayer, state);
-
-  //discard card from hand
-  discardCard(handPos, currentPlayer, state, 0);
+  }
+	
+   discardCard(handPos, currentPlayer, state, 0);
 }
 
-void run_Minion(struct gameState *state, int handPos, int currentPlayer, int choice1, int choice2)
+void run_Minion(struct gameState *state, int handPos, int currentPlayer, int choice2, int choice1)
 {
   int i;
   int j;
@@ -749,7 +750,7 @@ void run_council_room(struct gameState *state, int currentPlayer, int handPos)
     }
 		    
   //+1 Buy
-  state->numBuys++;
+  state->numBuys=1;
 		    
   //Each other player draws a card
   for (i = 0; i < state->numPlayers; i++)
