@@ -764,6 +764,36 @@ void run_council_room(struct gameState *state, int currentPlayer, int handPos)
   discardCard(handPos, currentPlayer, state, 0);
 }
 
+int run_Remodel(struct gameState *state, int currentPlayer, int choice1, int choice2, int handPos)
+{
+  int i;
+  int j;
+  
+  j = state->hand[currentPlayer][choice1];  //store card we will trash
+
+  if ( (getCost(state->hand[currentPlayer][choice1]) + 2) > getCost(choice2) )
+    {
+      return -1;
+    }
+
+  gainCard(choice2, state, 0, currentPlayer);
+
+  //discard card from hand
+  discardCard(handPos, currentPlayer, state, 0);
+
+  //discard trashed card
+  for (i = 0; i < state->handCount[currentPlayer]; i++)
+    {
+      if (state->hand[currentPlayer][i] == j)
+	{
+	  discardCard(i, currentPlayer, state, 0);			
+	  break;
+	}
+    }
+
+  return 0;
+}
+
 int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus)
 {
   int i;
@@ -883,29 +913,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
       return 0;
 			
     case remodel:
-      j = state->hand[currentPlayer][choice1];  //store card we will trash
-
-      if ( (getCost(state->hand[currentPlayer][choice1]) + 2) > getCost(choice2) )
-	{
-	  return -1;
-	}
-
-      gainCard(choice2, state, 0, currentPlayer);
-
-      //discard card from hand
-      discardCard(handPos, currentPlayer, state, 0);
-
-      //discard trashed card
-      for (i = 0; i < state->handCount[currentPlayer]; i++)
-	{
-	  if (state->hand[currentPlayer][i] == j)
-	    {
-	      discardCard(i, currentPlayer, state, 0);			
-	      break;
-	    }
-	}
-
-
+      return run_Remodel(state, currentPlayer, choice1, choice2, handPos);
       return 0;
 		
     case smithy:
