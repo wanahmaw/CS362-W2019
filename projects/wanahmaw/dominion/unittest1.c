@@ -93,6 +93,7 @@ int main() {
         assertTrue(r, expected);    //check if game over with valid empty supply count
 
         //check if supply count changed for any CARDS by comparing with G state
+        //we don't check supply counts we changed
         for (j = i; j <= treasure_map; j++)
         {
                 printf("CARD[%d] supply count = %d, expected = %d\n", j, testG.supplyCount[j], 
