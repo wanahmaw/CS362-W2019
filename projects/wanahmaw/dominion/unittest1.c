@@ -78,7 +78,7 @@ int main() {
         memcpy(&testG, &G, sizeof(struct gameState));   //copy game state to test case
 
         //set supply count to 0
-        for (j = 0; j <= i; j++)
+        for (j = 0; j < i; j++)
             testG.supplyCount[j] = 0;
 
         r = isGameOver(&testG);
@@ -93,7 +93,7 @@ int main() {
         assertTrue(r, expected);    //check if game over with valid empty supply count
 
         //check if supply count changed for any CARDS by comparing with G state
-        for (j = 0; j <= treasure_map; j++)
+        for (j = i; j <= treasure_map; j++)
         {
                 printf("CARD[%d] supply count = %d, expected = %d\n", j, testG.supplyCount[j], 
                 G.supplyCount[j]);
