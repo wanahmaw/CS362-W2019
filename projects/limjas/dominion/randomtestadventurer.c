@@ -51,14 +51,12 @@ int main() {
         }
         for(int i = 0; i < game.handCount[currentplayer]; i++){
             if(game.hand[currentplayer][i] == copper || game.hand[currentplayer][i] == silver || game.hand[currentplayer][i] == gold){
-                printf("here is coins count %d\n", coinsCount1);
                 coinsCount1++;
             }
         }
         cardEffect(myCard, myChoice1, myChoice2, myChoice3, &game, myHandPos, myBonus);
         for(int j = 0; j < game.handCount[currentplayer]; j++){
             if(game.hand[currentplayer][j] == copper || game.hand[currentplayer][j] == silver || game.hand[currentplayer][j] == gold){
-                printf("here is coins count2 %d\n", coinsCount2);
                 coinsCount2++;
             }
         }
