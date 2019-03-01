@@ -1,8 +1,5 @@
-run make all #To compile the dominion code
-run ./playdom 30 # to run playdom code
-
-# Run each random test to get corresponding .out file with coverage results
-# After a test make sure to make clean to remove gcov buildup:
+Run each random test to get corresponding .out file with coverage results
+After a test make sure to make clean to remove gcov buildup:
 
 make randomtestadventurer
 make randomtestcard1
