@@ -10,9 +10,10 @@
 #include "rngs.h"
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 #define CARD "Smithy"
-#define NOISY 1
+#define NOISY 0
 
 int ERRORS = 0; // Global error counter
 
@@ -21,12 +22,12 @@ void assertTrue (int a, int b, int equal)
 {
     if (!equal && a == b)
     {
-        printf("assert failed\n");
+        //printf("assert failed\n");
         ERRORS++;
     }
     else if (equal && a != b)
     {
-        printf("assert failed\n");
+        //printf("assert failed\n");
         ERRORS++;
     }
 }
@@ -42,7 +43,7 @@ void checkSmithyCard(struct gameState *post, int handPos, int p)
     // Draw 3 cards
     for (i = 0; i < 3; i++)
     {
-        drawCard(p, &pre);
+        drawCard(p, &pre); 
     }
     // Discard Smithy card
     discardCard(handPos, p, &pre, 0);
@@ -59,8 +60,9 @@ void checkSmithyCard(struct gameState *post, int handPos, int p)
 
 int main()
 {
+    clock_t begin = clock();
     int i, n, p;
-    int count = 8000, handPos = 0;
+    int count = 50000, handPos = 0;
     struct gameState G;
 
     printf("Testing %s\nRANDOM TESTS\n", CARD);
@@ -70,7 +72,7 @@ int main()
 
     for (n = 0; n < count; n++) // Iterate random tests
     {
-        printf("At %d...", n+1);
+        if (NOISY) printf("At %d...", n+1);
         for (i = 0; i < sizeof(struct gameState); i++){
             ((char*)&G)[i] = floor(Random() * 256); // Randomize game
         }
@@ -83,6 +85,17 @@ int main()
         G.handCount[p] = floor(Random() * MAX_HAND);
         G.playedCardCount = floor(Random() * (MAX_DECK-1));
 
+        handPos = floor(Random() * G.handCount[p]);
+        // Split tests into 3 parts to cover 100% of discardCard
+        if (n < (count/3)) {
+            handPos = G.handCount[p] - 1;
+        }
+        if (n > (count * (2.0/3.0))){
+            G.handCount[p] = 1;
+        }
+
+
+
         checkSmithyCard(&G, handPos, p);
     }
 
@@ -90,6 +103,11 @@ int main()
         printf("********ALL TESTS PASSED!********\n\n");
     else
         printf("********TESTS FAILED %d times********\n\n", ERRORS);
+
+    // https://stackoverflow.com/questions/5248915/execution-time-of-c-program
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf ("This took %f\n", time_spent);
 
     return 0;
 }

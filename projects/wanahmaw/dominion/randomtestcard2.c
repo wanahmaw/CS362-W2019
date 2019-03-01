@@ -12,7 +12,7 @@
 #include <math.h>
 
 #define CARD "Council Room"
-#define NOISY 1
+#define NOISY 0
 
 int ERRORS = 0; // Global error counter
 
@@ -99,6 +99,10 @@ int main() {
         G.discardCount[p] = floor(Random() * MAX_DECK);
         G.handCount[p] = floor(Random() * MAX_HAND);
 
+        do {
+            G.handCount[p] = floor(Random() * MAX_HAND);
+        } while (G.handCount[p] > 496);
+
         // Set deck, discard, and hand count for all players
         for (i = 0; i < G.numPlayers; i++) {
             if (i != p) {
@@ -108,6 +112,14 @@ int main() {
             }
         }
         G.playedCardCount = floor(Random() * (MAX_DECK-1));
+
+        if (NOISY) {
+            printf("Initial hand count:\t");
+            for (i = 0; i < G.numPlayers; i ++) {
+                printf("G.handCount[%d] = %d\n", i, G.handCount[i]);
+            }
+            printf("\n");
+        }
 
         checkCouncilRoom(&G, p, handPos);
     }
