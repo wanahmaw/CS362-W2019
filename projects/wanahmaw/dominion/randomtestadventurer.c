@@ -21,12 +21,12 @@ void assertTrue (int a, int b, int equal)
 {
     if (!equal && a == b)
     {
-        printf("assert failed\n");
+        //printf("assert failed\n");
         ERRORS++;
     }
     else if (equal && a != b)
     {
-        printf("assert failed\n");
+        //printf("assert failed\n");
         ERRORS++;
     }
 }
