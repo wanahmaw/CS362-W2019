@@ -18,7 +18,6 @@ public class UrlValidatorTest extends TestCase {
    }
 
    
-   
    public void testManualTest()
    {
       UrlValidator urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
@@ -32,31 +31,41 @@ public class UrlValidatorTest extends TestCase {
       System.out.println("gogle.c");
       System.out.println(urlVal.isValid("gogle.c"));
    }
-   
-   
-   public void testYourFirstPartition()
-   {
-	 //You can use this function to implement your First Partition testing	   
-	   System.out.println("\nTesting Parititon:\n");
-
-	    String[] schemesRegexp = {"http://", "h3tp://", "://", ":/", " "};
-	    UrlValidator valForSchemes = new UrlValidator(schemesRegexp, 0);
-	    for (int i = 0; i < schemesRegexp.length; i++) {
-	      String curScheme = schemesRegexp[i];
-	      System.out.println("\nTesting " + curScheme);
-	      boolean valid = valForSchemes.isValidScheme(curScheme);
-	      if (valid == false && i == 0 || valid == false && i == 1 || valid == true && i == 2 || valid == true && i == 3 || valid == false && i == 4) {
-	        System.out.println("FAILED, invalid scheme\n");
-	      } else {
-	    	System.out.println("PASSED\n");
-	      }
-	    }
+   // scheme partition
+   public void testYourFirstPartition() {
+     System.out.println("\nSchemes Partitioning Test");
+     String[] schemeURLExs = {"http://", "ftp://", "mailto:", "fake://", " "}; //https, ftp, mailto, file, data, and irc
+     UrlValidator schemeVals = new UrlValidator(schemeURLExs, 0);
+     for (int i = 0; i < schemeURLExs.length; i++) {
+       String current = schemeURLExs[i];
+       System.out.println("\nTEST: " + current);
+       boolean validScheme = schemeVals.isValidScheme(current);
+       if (validScheme == false && i == 0 || validScheme == false && i == 1 || validScheme == true && i == 2 || validScheme == true && i == 3 || validScheme == false && i == 4) {
+         System.out.println("FAILED, invalid scheme\n");
+       } else {
+     	System.out.println("PASSED\n");
+       }
+     }
    }
    
-   public void testYourSecondPartition(){
-		 //You can use this function to implement your Second Partition testing	   
-
+   // authority partition
+   public void testYourSecondPartition() {
+     System.out.println("\nAuthority Test");
+     String[] authorityURLExs = {"www.example.com", "www.yahoo.com", " ", "www.amazon.com"};
+     UrlValidator authVal = new UrlValidator(authorityURLExs, 0);
+     for (int i = 0; i < authorityURLExs.length; i++) {
+       String current = authorityURLExs[i];
+       System.out.println("\nTesting: " + current);
+       boolean validAuthority = authVal.isValidAuthority(current);
+       if (validAuthority == false && i == 0 || validAuthority == true && i == 1 || validAuthority == true && i == 2 || validAuthority == true && i == 3 || validAuthority == true && i == 4) {
+         System.out.println("FAILED, invalid authority\n");
+       } else {
+     	System.out.println("PASSED\n");
+       }
+     }
    }
+
+
    //You need to create more test cases for your Partitions if you need to 
    
    public void testIsValid()
