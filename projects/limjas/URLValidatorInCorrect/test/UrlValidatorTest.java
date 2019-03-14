@@ -1,4 +1,8 @@
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.concurrent.ThreadLocalRandom;
 
 import junit.framework.TestCase;
 
@@ -96,7 +100,7 @@ public class UrlValidatorTest extends TestCase {
                                 urlBuilder.append(query[m]);
                             }
                             String finalUrl = urlBuilder.toString();
-                            //System.out.println(“\nTesting ” + finalUrl);
+                            //System.out.println("\nTesting ” + finalUrl);
                             if (!urlVal.isValid(finalUrl)) {
                                 System.out.println(finalUrl);
                             }
@@ -107,6 +111,11 @@ public class UrlValidatorTest extends TestCase {
         }
    }
 
+   /*
+   * 2nd partition only focuses on invalid URLs
+   * Precondition: N/A
+   * Post-condition: All test cases are invalid
+  */
    
    public void testYourSecondPartition() {    
        // To be used for building a complete URL
@@ -167,7 +176,7 @@ public class UrlValidatorTest extends TestCase {
                                urlBuilder.append(query[m]);
                            }
                            String finalUrl = urlBuilder.toString();
-                           //System.out.println(“\nTesting ” + finalUrl);
+                           //System.out.println("\nTesting ” + finalUrl);
                            if ( urlVal.isValid(finalUrl)) {
                                System.out.println(finalUrl);
                            }
@@ -177,6 +186,145 @@ public class UrlValidatorTest extends TestCase {
            }
        }
   }
+   /*
+   * 3rd partition random partition focuses on randomization of combinations
+   * Precondition: N/A
+   * Post-condition: All test cases are valid
+  */
+   public void testYourThirdPartitionRandom() {
+	      StringBuilder urlBuilder = new StringBuilder();
+	      UrlValidator urlVal;
+	      String[] scheme = {"http://", // true
+	              "3ht://", // false
+	              "ftp://", // true
+	              "h3t://", // true
+	              "http/"}; // false
+//	      String[] authority1 = {"www.google.com"}; // false
+	      String[] authority = {"com.asdf.www", // false
+	              "asdf.com", // true
+	              "invalid.url.http", // false
+	              "255.255.255.255", // true
+	              "this.is.invalid", // false
+	              "www.apple.com", // true
+	              "happy.asdf.doesntwork", // false
+	              ".bbb"}; // false
+	      String[] port = {"", // true
+	              "b1234", // false
+	              ":0", // true
+	              "badport"}; // false
+	      String[] path = {"@$%%dontwork", // false
+	              "/happy3/", // true
+	              "/hi//", // false
+	              "/works5", // true
+	              "/$777", // true
+	               "/.."}; // false
+	      String[] query = {"%wrongquery", // false
+	              "?action=view", // true
+	              "&queryisfalse", // false
+	              ""}; // true
+	      // Creates method that validates all URL schemes
+	      urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
+	      System.out.println("\nTesting valid and invalid Urls by building URL through use of random number generator");
+	      for (int cases = 1; cases < 101; cases++) {
+	         System.out.println("\ntest case #" + cases);
+	         // generate random numbers https://stackoverflow.com/questions/363681/how-do-i-generate-random-integers-within-a-specific-range-in-java
+	         int randomScheme = ThreadLocalRandom.current().nextInt(0, 4 + 1);
+	         int randomAuthority = ThreadLocalRandom.current().nextInt(0, 7 + 1);
+	         int randomPort = ThreadLocalRandom.current().nextInt(0, 3 + 1);
+	         int randomPath = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+	         int randomQuery = ThreadLocalRandom.current().nextInt(0,  3 + 1);
+	         // reset url string
+	         urlBuilder.setLength(0);
+	         // append random scheme, authority, port, path, then query
+	         urlBuilder.append(scheme[randomScheme]);
+	         urlBuilder.append(authority[randomAuthority]);
+	         urlBuilder.append(port[randomPort]);
+	         urlBuilder.append(path[randomPath]);
+	         urlBuilder.append(query[randomQuery]);
+	         // save the randomly built Url to finalUrl
+	         String finalUrl = urlBuilder.toString();
+	         System.out.println(finalUrl);
+	         if (randomScheme == 1 || randomScheme == 4) {
+	            System.out.println("scheme is: " + scheme[randomScheme]);
+	            System.out.println("scheme should be invalid");
+	         }
+	         else {
+	            System.out.println("scheme is: " + scheme[randomScheme]);
+	            System.out.println("scheme should be valid");
+	         }
+//	           System.out.println("authority is: " + authority1[0]);
+//	           System.out.println("authority should be valid");
+	         if (randomAuthority == 0 || randomAuthority == 2 || randomAuthority == 4 || randomAuthority == 6 || randomAuthority == 7) {
+	            System.out.println("authority is: " + authority[randomAuthority]);
+	            System.out.println("authority should be invalid");
+	         }
+	         else {
+	            System.out.println("authority is: " + authority[randomAuthority]);
+	            System.out.println("authority should be valid");
+	         }
+	         if (randomPort == 1 || randomPort == 3) {
+	            System.out.println("port is: " + port[randomPort]);
+	            System.out.println("port should be invalid");
+	         }
+	         else {
+	            System.out.println("port is: " + port[randomPort]);
+	            System.out.println("port should be valid");
+	         }
+	         if (randomPath == 0 || randomPath == 2 || randomPath == 5) {
+	            System.out.println("path is: " + path[randomPath]);
+	            System.out.println("path should be invalid");
+	         }
+	         else {
+	            System.out.println("path is: " + path[randomPath]);
+	            System.out.println("path should be valid");
+	         }
+	         if (randomQuery == 0 || randomQuery == 2) {
+	            System.out.println("query is: " + query[randomQuery]);
+	            System.out.println("query should be invalid");
+	         }
+	         else {
+	            System.out.println("query is: " + query[randomQuery]);
+	            System.out.println("query should be valid");
+	         }
+	         System.out.println(urlVal.isValid(finalUrl));
+	      }
+	   }
+    /* Validates URLs from a file supplied by azadi’s Github Repo
+    * https://github.com/citizenlab/test-lists/blob/master/lists/ae.csv
+    * Precondition: N/A
+    * Post-condition: Gets the URL from a CSV file and validates
+    */
+ public void testFromFile() {
+
+        // Cited implementation for CSV/txt reader https://www.mkyong.com/java/how-to-read-and-parse-csv-file-in-java/
+        String file, line, delimiter;
+        UrlValidator urlVal;
+       
+        System.out.println("Programming based testing via URLS from CSV file");
+       
+        // Setup
+        delimiter = ",";
+        file = "url.txt";
+        urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
+       
+        // Make sure we can open the file and use a buffered reader
+        try (BufferedReader buff = new BufferedReader(new FileReader(file))) {
+           
+            // Grab line if it’s readable and parse for the URL
+            while ((line = buff.readLine()) != null) {
+               
+                String url = line.split(delimiter)[0];    // Get url from CSV
+               
+                System.out.println("\nTesting " + url);
+                if (! urlVal.isValid(url)) {        // Print false when invalid
+                    System.out.println("False");
+                }
+            }
+        } catch (IOException e) {    // Catch error if we can’t open file
+            System.out.println("Can’t open file");
+            e.printStackTrace();
+        }
+   } 
    //You need to create more test cases for your Partitions if you need to 
    // scheme partition
    public void testIsValid() {
