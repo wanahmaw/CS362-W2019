@@ -31,9 +31,156 @@ public class UrlValidatorTest extends TestCase {
       System.out.println("gogle.c");
       System.out.println(urlVal.isValid("gogle.c"));
    }
+   /* Validates purely valid URLs. Set is simple in interest of time
+    * 1st partition only focuses on valid URLs
+    * Precondition: N/A
+    * Post-condition: All test cases are valid
+   */
+   public void testYourFirstPartition() {    
+        // To be used for building a complete URL
+        int i, j, k, l, m;
+        StringBuilder urlBuilder = new StringBuilder();
+        UrlValidator urlVal;
+        String[] scheme = {"http://","ftp://",
+                              "h3t://",
+                              ""};
+       
+        String[] authority = {"www.google.com",
+                                 "go.com",
+                                 "go.au",
+                                 "123.com",
+                                 "255.255.255.255"};
+     
+        String[] port = {":10",
+                            ":65535",
+                            ":0",
+                            ""};
+       
+        String[] path = {"/yay",
+                            "/yay1",
+                            "/1yay",
+                            "/$17",
+                            "/yay/",
+                            "/yay/yatta"};
+       
+        String[] query = {"?cat=meow",
+                             "?cat=meow&claws=out",
+                             ""};
+       
+        // Creates method that validates all URL schemes
+        urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
+       
+        System.out.println("\n1st partition: Testing only valid URLs");
+       
+        // Loops through each part to build an URL. Then we test it
+        for (i = 0; i < scheme.length; i++) {
+            for (j = 0; j < authority.length; j++) {
+                for (k = 0; k < port.length; k++) {
+                    for (l = 0; l < path.length; l++) {
+                        for (m = 0; m < query.length; m++) {
+                            // Reset string
+                            urlBuilder.setLength(0);
+                            if (! scheme[i].equals(null)) {
+                                urlBuilder.append(scheme[i]);
+                            }
+                            if (! authority[j].equals(null)) {
+                                urlBuilder.append(authority[j]);
+                            }
+                            if (! port[k].equals(null)) {
+                                urlBuilder.append(port[k]);
+                            }
+                            if (! path[l].equals(null)) {
+                                urlBuilder.append(path[l]);
+                            }
+                            if (! query[m].equals(null)) {
+                                urlBuilder.append(query[m]);
+                            }
+                            String finalUrl = urlBuilder.toString();
+                            //System.out.println(“\nTesting ” + finalUrl);
+                            if (!urlVal.isValid(finalUrl)) {
+                                System.out.println(finalUrl);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+   }
+
+   
+   public void testYourSecondPartition() {    
+       // To be used for building a complete URL
+       int i, j, k, l, m;
+       StringBuilder urlBuilder = new StringBuilder();
+       UrlValidator urlVal;
+       String[] scheme = {"fake","schemewrongurl",
+                             "abcdefg",
+                             "hi"};
+      
+       String[] authority = {"com.google.www",
+                                "invalid.url.http",
+                                "plastic.trees.are.fake",
+                                "canadian.geese.urlfake",
+                                "9255.fake.cc"};
+    
+       String[] port = {"xyz",
+                           "z123",
+                           "abcd",
+                           "wrongurl"};
+      
+       String[] path = {"@1!@$",
+                           "%#$#$#$",
+                           "wrongURLpath.http",
+                           "~~~12",
+                           "abcdWrong1232",};
+      
+       String[] query = {"!fakequery",
+                            "&thisisnotaquery",
+                            "()()()"};
+      
+       // Creates method that validates all URL schemes
+       urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
+      
+       System.out.println("\n2nd partition: Testing only invalid URLs");
+      
+       // Loops through each part to build an URL. Then we test it
+       for (i = 0; i < scheme.length; i++) {
+           for (j = 0; j < authority.length; j++) {
+               for (k = 0; k < port.length; k++) {
+                   for (l = 0; l < path.length; l++) {
+                       for (m = 0; m < query.length; m++) {
+                           // Reset string
+                           urlBuilder.setLength(0);
+                           if (! scheme[i].equals(null)) {
+                               urlBuilder.append(scheme[i]);
+                           }
+                           if (! authority[j].equals(null)) {
+                               urlBuilder.append(authority[j]);
+                           }
+                           if (! port[k].equals(null)) {
+                               urlBuilder.append(port[k]);
+                           }
+                           if (! path[l].equals(null)) {
+                               urlBuilder.append(path[l]);
+                           }
+                           if (! query[m].equals(null)) {
+                               urlBuilder.append(query[m]);
+                           }
+                           String finalUrl = urlBuilder.toString();
+                           //System.out.println(“\nTesting ” + finalUrl);
+                           if ( urlVal.isValid(finalUrl)) {
+                               System.out.println(finalUrl);
+                           }
+                       }
+                   }
+               }
+           }
+       }
+  }
+   //You need to create more test cases for your Partitions if you need to 
    // scheme partition
-   public void testYourFirstPartition() {
-     System.out.println("\nSchemes Partitioning Test");
+   public void testIsValid() {
+     System.out.println("\nSchemes Unit Test");
      String[] schemeURLExs = {"http://", "ftp://", "mailto:", "fake://", " "}; //https, ftp, mailto, file, data, and irc
      UrlValidator schemeVals = new UrlValidator(schemeURLExs, 0);
      for (int i = 0; i < schemeURLExs.length; i++) {
@@ -48,32 +195,21 @@ public class UrlValidatorTest extends TestCase {
      }
    }
    
-   // authority partition
-   public void testYourSecondPartition() {
-     System.out.println("\nAuthority Test");
-     String[] authorityURLExs = {"www.example.com", "www.yahoo.com", " ", "www.amazon.com"};
-     UrlValidator authVal = new UrlValidator(authorityURLExs, 0);
-     for (int i = 0; i < authorityURLExs.length; i++) {
-       String current = authorityURLExs[i];
-       System.out.println("\nTesting: " + current);
-       boolean validAuthority = authVal.isValidAuthority(current);
-       if (validAuthority == false && i == 0 || validAuthority == true && i == 1 || validAuthority == true && i == 2 || validAuthority == true && i == 3 || validAuthority == true && i == 4) {
-         System.out.println("FAILED, invalid authority\n");
+   // query Partition
+   public void testIsValid2() {
+     System.out.println("\nQuery Unit Test:\n");
+     String[] queryURLExs = {"?action=read", "?name=ferret", "?color=purple", "", "???Fakeaction"};
+     UrlValidator queryVals = new UrlValidator(queryURLExs, 0);
+     for (int i = 0; i < queryURLExs.length; i++) {
+       String current = queryURLExs[i];
+       System.out.println("\nTesting " + current);
+       boolean validQuery = queryVals.isValidQuery(current);
+       if(validQuery == false && i == 0 || validQuery == true && i == 1 || validQuery == false && i == 2 || validQuery == true && i == 3) {
+         System.out.println("FAILED, invalid Query\n");
        } else {
      	System.out.println("PASSED\n");
        }
      }
    }
-
-
-   //You need to create more test cases for your Partitions if you need to 
-   
-   public void testIsValid()
-   {
-	   //You can use this function for programming based testing
-
-   }
-   
-
 
 }
