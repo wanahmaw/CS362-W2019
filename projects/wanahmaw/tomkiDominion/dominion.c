@@ -643,28 +643,8 @@ int getCost(int cardNumber)
   return -1;
 }
 
-
-
-int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus)
-{
-  int i;
-  int j;
-  int k;
-  int x;
-  int index;
-  int currentPlayer = whoseTurn(state);
-  int nextPlayer = currentPlayer + 1;
-
-  int tributeRevealedCards[2] = {-1, -1};
-  int temphand[MAX_HAND];// moved above the if statement
-  int drawntreasure=0;
-  int cardDrawn;
-  int z = 0;// this is the counter for the temp hand
-  if (nextPlayer > (state->numPlayers - 1)){
-    nextPlayer = 0;
-  }
-  
- int adventurerFunction() {
+// ADVENTURER REFACTORED BY ASH
+int adventurerFunction(int drawntreasure, int currentPlayer, struct gameState *state, int cardDrawn, int temphand[], int z) {
 
 	  while (drawntreasure < 3) { //changed from < 2 to < 3 to introduce bug
 		  if (state->deckCount[currentPlayer] < 1) {//if the deck is empty we need to shuffle discard and add to deck
@@ -687,7 +667,9 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	  return 0;
   }
 
- int smithyFunction() {
+  // SMITHY REFACTORED BY ASH
+  int smithyFunction(int currentPlayer, struct gameState *state, int handPos) {
+    int i;
 	 //changed from +3 Cards to +2 Cards to introduce bug
 	 for (i = 0; i < 2; i++)
 	 {
@@ -699,7 +681,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	 return 0;
  }
 
- int great_hallFunction() {
+ // GREAT HALL REFACTORED BY ASH
+ int great_hallFunction(int currentPlayer, struct gameState *state, int handPos) {
 	 //+1 Card
 	 drawCard(currentPlayer, state);
 
@@ -711,7 +694,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	 return 0;
  }
 
- int embargoFunction() {
+ // EMBARGO REFACTORED BY ASH
+int embargoFunction(struct gameState *state, int choice1, int handPos, int currentPlayer) {
 	 //changed from +2 Coins to +0 coins
 	 state->coins = state->coins;
 
@@ -728,8 +712,10 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	 discardCard(handPos, currentPlayer, state, 1);
 	 return 0;
  }
- 
- int council_roomFunction() {
+
+ // COUNCIL ROOM REFACTORED BY ASH
+int council_roomFunction(int currentPlayer, struct gameState *state, int handPos) {
+  int i;
 	 //+4 Cards
 	 for (i = 0; i < 4; i++)
 	 {
@@ -754,17 +740,34 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 	 return 0;
  }
 
- 
-	
+int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus)
+{
+  int i;
+  int j;
+  int k;
+  int x;
+  int index;
+  int currentPlayer = whoseTurn(state);
+  int nextPlayer = currentPlayer + 1;
+
+  int tributeRevealedCards[2] = {-1, -1};
+  int temphand[MAX_HAND];// moved above the if statement
+  int drawntreasure=0;
+  int cardDrawn;
+  int z = 0;// this is the counter for the temp hand
+  if (nextPlayer > (state->numPlayers - 1)){
+    nextPlayer = 0;
+  }
+  
   //uses switch to select card and perform actions
   switch( card ) 
     {
     case adventurer:
-		adventurerFunction();
+		adventurerFunction(drawntreasure, currentPlayer, state, cardDrawn, temphand, z);
 
 			
     case council_room:
-	  council_roomFunction();
+	  council_roomFunction(currentPlayer, state, handPos);
 			
     case feast:
       //gain card with cost up to 5
@@ -884,7 +887,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
       return 0;
 		
     case smithy:
-	  smithyFunction();
+	  smithyFunction(currentPlayer, state, handPos);
 		
     case village:
       //+1 Card
@@ -949,7 +952,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
       return 0;
 		
     case great_hall:
-	  great_hallFunction();
+	  great_hallFunction(currentPlayer, state, handPos);
 		
     case minion:
       //+1 action
@@ -1178,7 +1181,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 
 		
     case embargo: 
-	  embargoFunction();
+	  embargoFunction(state, choice1, handPos, currentPlayer);
 		
     case outpost:
       //set outpost flag
