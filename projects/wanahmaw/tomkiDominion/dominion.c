@@ -644,8 +644,8 @@ int getCost(int cardNumber)
 }
 
 // ADVENTURER REFACTORED BY ASH
-int adventurerFunction(int drawntreasure, int currentPlayer, struct gameState *state, int cardDrawn, int temphand[], int z) {
-
+int adventurerFunction(int drawntreasure, int currentPlayer, struct gameState *state, int temphand[], int z) {
+  int cardDrawn;
 	  while (drawntreasure < 3) { //changed from < 2 to < 3 to introduce bug
 		  if (state->deckCount[currentPlayer] < 1) {//if the deck is empty we need to shuffle discard and add to deck
 			  shuffle(currentPlayer, state);
@@ -763,7 +763,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
   switch( card ) 
     {
     case adventurer:
-		adventurerFunction(drawntreasure, currentPlayer, state, cardDrawn, temphand, z);
+		adventurerFunction(drawntreasure, currentPlayer, state, temphand, z);
 
 			
     case council_room:
