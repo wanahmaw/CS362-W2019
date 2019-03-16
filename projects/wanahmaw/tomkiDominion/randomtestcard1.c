@@ -13,7 +13,7 @@
 #include <time.h>
 
 #define CARD "Smithy"
-#define NOISY 0
+#define NOISY 1
 
 int ERRORS = 0; // Global error counter
 
@@ -51,6 +51,10 @@ void checkSmithyCard(struct gameState *post, int handPos, int p)
     // Check smithy function
     assertTrue(r, 0, 1);
     // Check hand count
+    if (NOISY) {
+        printf("Expected handcount = %d\tResult = %d\npre.handCount[%d]\tpost->handCount[p]\n"
+        , pre.handCount[p], post->handCount[p], p);
+    }
     assertTrue(post->handCount[p], pre.handCount[p], 1);
     // Check deck count
     assertTrue(post->deckCount[p], pre.deckCount[p], 1);
