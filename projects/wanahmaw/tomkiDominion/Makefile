@@ -69,7 +69,7 @@ randomtestcard1: randomtestcard1.c dominion.o rngs.o
 
 randomtestcard2: randomtestcard2.c dominion.o rngs.o
 	gcc -o randomtestcard2 -g randomtestcard2.c dominion.o rngs.o $(CFLAGS)
-	./randomtestcard2 >> randomtestcard2.out
+	./randomtestcard2
 	gcov -c -b -f dominion.c >> randomtestcard2.out
 	cat dominion.c.gcov >> randomtestcard2.out
 

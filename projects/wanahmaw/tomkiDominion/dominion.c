@@ -644,8 +644,12 @@ int getCost(int cardNumber)
 }
 
 // ADVENTURER REFACTORED BY ASH
-int adventurerFunction(int drawntreasure, int currentPlayer, struct gameState *state, int temphand[], int z) {
+void adventurerFunction(int drawntreasure, int currentPlayer, struct gameState *state, int z) {
   int cardDrawn;
+  int temphand[MAX_HAND];
+  currentPlayer = whoseTurn(state);
+  cardDrawn = -999;
+  z = 0;
 	  while (drawntreasure < 3) { //changed from < 2 to < 3 to introduce bug
 		  if (state->deckCount[currentPlayer] < 1) {//if the deck is empty we need to shuffle discard and add to deck
 			  shuffle(currentPlayer, state);
@@ -664,8 +668,35 @@ int adventurerFunction(int drawntreasure, int currentPlayer, struct gameState *s
 		  state->discard[currentPlayer][state->discardCount[currentPlayer]++] = temphand[z - 1]; // discard all cards in play that have been drawn
 		  z = z - 1;
 	  }
-	  return 0;
   }
+
+  void run_Adventurer(struct gameState *state)
+{
+  int currentPlayer = whoseTurn(state);
+  int cardDrawn = -999;
+  int drawntreasure = 0;
+  int temphand[MAX_HAND];
+  int z = 0; // this is the counter for the temp hand
+  
+  while(drawntreasure<2){
+	if (state->deckCount[currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
+	  shuffle(currentPlayer, state);
+	}
+	drawCard(currentPlayer, state);
+	cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
+	if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
+	  drawntreasure=drawntreasure+2;
+	else{
+	  temphand[z]=cardDrawn;
+	  state->handCount[currentPlayer]--; //this should just remove the top card (the most recently drawn one).
+	  z++;
+	}
+      }
+      while(z-1>=0){
+	state->discard[currentPlayer][state->discardCount[currentPlayer]++]=temphand[z-1]; // discard all cards in play that have been drawn
+	z=z-1;
+      }
+}
 
   // SMITHY REFACTORED BY ASH
   int smithyFunction(int currentPlayer, struct gameState *state, int handPos) {
@@ -763,7 +794,9 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
   switch( card ) 
     {
     case adventurer:
-		adventurerFunction(drawntreasure, currentPlayer, state, temphand, z);
+		//adventurerFunction(drawntreasure, currentPlayer, state, z);
+    run_Adventurer(state);
+    return 0;
 
 			
     case council_room:

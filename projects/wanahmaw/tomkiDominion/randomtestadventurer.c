@@ -12,7 +12,7 @@
 #include <math.h>
 
 #define CARD "Adventurer"
-#define NOISY 0
+#define NOISY 1
 
 int ERRORS = 0; // Global error counter
 
