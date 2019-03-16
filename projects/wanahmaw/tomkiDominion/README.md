@@ -1,2 +1,1 @@
-Kimberly Tom's Dominion repo\n
-We will do a bug report & debug
+Kimberly Tom's Dominion repo. For bug report & debug
